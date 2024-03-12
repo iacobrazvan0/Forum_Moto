@@ -34,19 +34,33 @@
     <div class="nav-container">
       <nav>
         <ul>
-          <li><a href="#">Acasă</a></li>
-          <li><a href="#">Forum</a></li>
-          <li><a href="#">Despre</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><button class="login-btn">Login</button></li>
+          <li><a href="Login.html" class="login-btn">Login</a></li>
+
+          <li><button class="signup-btn">Sign Up</button></li>
+            <li>        
+              <div class="menu-container">
+              <button class="menu-btn" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+              </button>
+              <nav class="menu" onclick="toggleMenu()">
+                  <a href="#">Acasă</a>
+                  <a href="#">Forum</a>
+                  <a href="#">Despre</a>
+                  <a href="#">Contact</a> 
+              </nav>  
+            </div>
+          </li>
         </ul>
       </nav>
     </div>
-  </header>
-      
-    
-
+  </header>   
       <div class="container">
         <section id="latest-discussions">
+          <br>
+          <br>
           <h2>Cele Mai Noi Discuții</h2>
           <ul id="discussion-list">
             <!-- Aici vor fi afișate cele mai recente discuții din forum -->

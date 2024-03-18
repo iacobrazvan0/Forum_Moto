@@ -2,7 +2,7 @@
 
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: Garamond, serif;
   margin: 0;
   padding: 0;
   display: flex;
@@ -139,7 +139,7 @@ nav ul li a:hover {
   margin: 5px 2%;
 }
 
-.menu-btn:hover span {
+.menu-btn.active span {
   background-color: #0056b3;
 }
 
@@ -223,32 +223,5 @@ nav ul li a:hover {
   display: none;
   width: 100%; /* Setăm lățimea să fie egală cu lățimea header-ului */
   height: auto; /* Ajustăm înălțimea automată pentru a menține proporțiile imaginilor */
-}
-
-/* Stilurile pentru butoanele de navigare */
-
-.prev, .next {
-  cursor: pointer;
-  position: absolute;
-  top: 50%;
-  width: auto;
-  margin-top: -22px;
-  padding: 16px;
-  color: white;
-  font-weight: bold;
-  font-size: 20px;
-  transition: 0.6s ease;
-  border-radius: 0 3px 3px 0;
-  user-select: none;
-  z-index: 1; /* Asigură că butoanele sunt peste imagini */
-}
-
-.next {
-  right: 0;
-  border-radius: 3px 0 0 3px;
-}
-
-.prev:hover, .next:hover {
-  background-color: rgba(0, 0, 0, 0.8);
 }
   

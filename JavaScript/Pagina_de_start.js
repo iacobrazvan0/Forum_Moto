@@ -52,7 +52,6 @@ var latestDiscussions = [
   });
   
   function toggleMenu() {
-    var navMenu = document.querySelector('nav');
-    navMenu.classList.toggle('nav-open');
+    const menuBtn = document.querySelector('.menu-btn');
+    menuBtn.classList.toggle('active');
   }
-  

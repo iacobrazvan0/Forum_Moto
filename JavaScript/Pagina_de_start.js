@@ -46,12 +46,21 @@ var latestDiscussions = [
     showSlides(slideIndex += n);
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Apelăm funcția pentru a începe slideshow-ul
-    showSlides();
-  });
-  
-  function toggleMenu() {
-    const menuBtn = document.querySelector('.menu-btn');
-    menuBtn.classList.toggle('active');
-  }
+
+// Obținem meniul și butonul de meniu
+const menu = document.querySelector('.menu');
+const menuBtn = document.querySelector('.menu-btn');
+
+// Adăugăm un eveniment de clic butonului de meniu pentru a afișa sau ascunde meniul
+menuBtn.addEventListener('click', function() {
+    menu.classList.toggle('active');
+});
+
+// Adăugăm un eveniment de clic la document pentru a ascunde meniul când se face clic în afara acestuia
+document.addEventListener('click', function(event) {
+    // Verificăm dacă elementul pe care s-a făcut clic nu este meniul sau butonul de meniu
+    if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+        // Ascundem meniul
+        menu.classList.remove('active');
+    }
+});

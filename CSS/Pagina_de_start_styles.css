@@ -54,13 +54,6 @@ header h1 {
 }
   
 /* Stiluri pentru bara de navigare */
-.nav-container {
-  background-color: #333;
-  height: 100px;
-  width: 100%;
-  position: relative;
-}
-
 nav {
   position: absolute;
   top: 100%; /* Plasăm bara de navigare sub header */
@@ -139,19 +132,18 @@ nav ul li a:hover {
   margin: 5px 2%;
 }
 
-.menu-btn.active span {
+.menu-btn:hover span{
   background-color: #0056b3;
 }
 
-.nav-open {
-  left: 0; /* Afisăm bara de navigare când butonul de meniu este apăsat */
-}
+
 
 /* Stiluri pentru meniul dropdown */
 .menu-container {
   position: auto;
   display: inline-block;
 }
+
 
 .menu {
   display: none;
@@ -168,15 +160,13 @@ nav ul li a:hover {
   text-decoration: none;
   display: block;
 }
-
 .menu a:hover {
   background-color: #0056b3;
 }
 
-.menu-container:hover .menu {
+.menu.active {
   display: block;
 }
-
 
 
   /* Stiluri pentru slideshow */

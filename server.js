@@ -26,7 +26,7 @@ const server = http.createServer((req, res) => {
 
     // Dacă calea nu conține o extensie, adăugăm extensia .html
     if (contentType === 'text/html' && req.url === '/') {
-        filePath = './Login.html'; // Aici poți specifica pagina de start a aplicației tale
+        filePath = './Pagina_de_start.html'; // Aici poți specifica pagina de start a aplicației tale
     }
 
     // Citim și servim fișierul solicitat

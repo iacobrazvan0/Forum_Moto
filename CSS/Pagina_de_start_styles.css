@@ -168,6 +168,26 @@ nav ul li a:hover {
   display: block;
 }
 
+.container {
+  width: 80%;
+  margin: auto;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+.discussion {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+}
+.discussion h2 {
+  margin-top: 0;
+}
+.discussion p {
+  margin-top: 5px;
+}
+
 
   /* Stiluri pentru slideshow */
 

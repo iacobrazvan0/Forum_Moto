@@ -1,54 +1,45 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
+const { MongoClient } = require('mongodb');
 
-const port = process.env.PORT || 3017;
+const app = express();
+const port = 3000;
 
-const server = http.createServer((req, res) => {
-    let filePath = '.' + req.url;
-    const extname = path.extname(filePath);
-    let contentType = 'text/html';
+const uri = 'mongodb+srv://razvaniacob0:9OIypiWCF9CP5Udp@cluster0.g4aw15b.mongodb.net/';
+const dbName = 'FORUM_MOTO';
 
-    // Setăm tipul de conținut corect pentru fișierele CSS și JavaScript
-    switch (extname) {
-        case '.css':
-            contentType = 'text/css';
-            break;
-        case '.js':
-            contentType = 'text/javascript';
-            break;
-        case '.jpg':
-        case '.jpeg':
-        case '.png':
-            contentType = 'image/jpeg'; // Poți schimba în 'image/png' dacă ai imagini PNG
-            break;
-    }
+app.use(bodyParser.json());
 
-    // Dacă calea nu conține o extensie, adăugăm extensia .html
-    if (contentType === 'text/html' && req.url === '/') {
-        filePath = './Pagina_de_start.html'; // Aici poți specifica pagina de start a aplicației tale
-    }
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
-    // Citim și servim fișierul solicitat
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            if (err.code === 'ENOENT') {
-                // Fișierul nu a fost găsit
-                res.writeHead(404);
-                res.end('Pagina nu a fost găsită!');
-            } else {
-                // Alte erori
-                res.writeHead(500);
-                res.end(`Eroare internă: ${err.code}`);
-            }
-        } else {
-            // Am găsit fișierul, trimitem răspunsul cu conținutul corespunzător
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(data);
-        }
-    });
+// Definirea rutei pentru înregistrare (POST)
+app.post('/register', async (req, res) => {
+  try {
+    const { first_name, last_name, moto, username, password } = req.body;
+
+    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection('users');
+
+    const result = await collection.insertOne({ first_name, last_name, moto, username, password });
+    console.log('User inserted:', result.insertedId);
+
+    res.status(200).json({ success: true, message: 'User registered successfully' });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ success: false, message: 'Error registering user' });
+  } finally {
+    client.close();
+  }
 });
 
-server.listen(port, () => {
-    console.log(`Serverul rulează la adresa http://localhost:${port}/`);
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Pagina_de_start.html'));
+  });
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}/`);
 });

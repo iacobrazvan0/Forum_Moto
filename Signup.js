@@ -109,3 +109,17 @@ router.post('/', (req, res) => {
 
 module.exports = router; // Adaugă această linie pentru a exporta router-ul
 module.exports = User;
+
+  function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
+    
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      confirmPasswordInput.type = "text";
+    } else {
+      passwordInput.type = "password";
+      confirmPasswordInput.type = "password";
+    }
+  }
+

@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema({
         }
     },
     moto: String,
-    username: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     password: {
         type: String,
         required: true,
@@ -40,6 +44,7 @@ const userSchema = new mongoose.Schema({
     }
 });
 userSchema.plugin(uniqueValidator);
+
 // Middleware pentru a cripta parola înainte de a salva utilizatorul în baza de date
 userSchema.pre('save', async function(next) {
     try {
@@ -64,25 +69,34 @@ userSchema.pre('save', async function(next) {
 });
 
 // Create a model for the 'users' collection
-const User = mongoose.model('users', userSchema);
+const User = mongoose.model('User', userSchema);
 
 router.post('/', (req, res) => {
     const { first_name, last_name, email, moto, username, password, confirm_password } = req.body;
 
+    console.log('Request body:', req.body);
+
     // Check if passwords match
     if (password !== confirm_password) {
-        return res.status(400).alert('Parolele nu coincid');
+        console.log('Parolele nu coincid');
+        return res.status(400).send('Parolele nu coincid');
     }
 
     // Check if email format is valid
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        return res.status(400).alert('Adresa de email nu este validă');
+        console.log('Adresa de email nu este validă');
+        return res.status(400).send('Adresa de email nu este validă');
     }
 
     // Check if password format is valid
-    if (!/^(?=.*[A-Z])(?=.*[!@#$%^&*()])(?=.*[0-9]).{8,}$/.test(password)) {
-        return res.status(400).alert('Parola trebuie să conțină cel puțin o literă mare, un caracter special și un număr și să aibă cel puțin 8 caractere');
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[.!@#$%^&*()])(?=.*[0-9]).{8,}$/;
+    console.log('Parola:', password);
+    console.log('Rezultatul testului pentru parolă:', passwordRegex.test(password));
+    if (!passwordRegex.test(password)) {
+        console.log('Parola nu este validă');
+        return res.status(400).send('Parola trebuie să conțină cel puțin o literă mare, un caracter special și un număr și să aibă cel puțin 8 caractere');
     }
+
 
     // Create a new user document
     const newUser = new User({
@@ -99,7 +113,7 @@ router.post('/', (req, res) => {
         .then(savedUser => {
             console.log('Utilizator înregistrat cu succes:', savedUser);
             // Redirect the user to the login page or send a success message
-            res.redirect('/login.html');
+            res.redirect('/Login.html');
         })
         .catch(err => {
             console.error('Eroare la salvarea utilizatorului:', err);
@@ -108,18 +122,4 @@ router.post('/', (req, res) => {
 });
 
 module.exports = router; // Adaugă această linie pentru a exporta router-ul
-module.exports = User;
-
-  function togglePasswordVisibility() {
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirm_password');
-    
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      confirmPasswordInput.type = "text";
-    } else {
-      passwordInput.type = "password";
-      confirmPasswordInput.type = "password";
-    }
-  }
-
+module.exports.User = User; // Exportă modelul User pentru a fi utilizat în alte fișiere

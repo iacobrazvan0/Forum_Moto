@@ -1,76 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forum Moto - Pagina de Start</title>
-  <link rel="stylesheet" href="Pagina_de_start_styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Moto</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Includeți fișierul CSS, dacă aveți -->
 </head>
 <body>
-  <header>
-    <div class="overlay"><h1>Forum Moto</h1></div>
-    <div class="slideshow-container">
-        
-      <div class="mySlides fade">
-        <img src="Poze/gettyimages-485567288-612x612.jpg" style="width:100%">
-      </div>
-  
-      <div class="mySlides fade">
-        <img src="Poze/images1.jpg" style="width:100%">          
-      </div>
-      
-      <div class="mySlides fade">
-        <img src="Poze/images2.jpg" style="width:100%">          
-      </div>
-
-      <div class="mySlides fade">
-        <img src="Poze/images.jpg" style="width:100%">          
-      </div>
-
-      <div class="mySlides fade">
-        <img src="Poze/images2.jpg" style="width:100%">          
-      </div>
-      
-    </div>
-    <div class="nav-container">
-      <nav>
-        <ul>
-          <li><a href="Login.html"><button class="login-btn">Login</button></a></li>
-          <li><a href="Signup.html"><button class="signup-btn">Signup</button></a></li>
-            <li>        
-              <div class="menu-container">
-              <button class="menu-btn" onclick="toggleMenu()">
-                <span></span>
-                <span></span>
-                <span></span>
-              </button>
-              <nav class="menu" onclick="toggleMenu()">
-                  <a href="Pagina_de_start.html">Acasă</a>
-                  <a href="Forum.html">Forum</a>
-                  <a href="#">Despre</a>
-                  <a href="#">Contact</a> 
-              </nav>  
+    <header>
+        <div class="overlay"><h1>Forum Moto</h1></div>
+        <div class="slideshow-container">
+            <div class="mySlides fade">
+                <img src="Poze/gettyimages-485567288-612x612.jpg" style="width:100%">
             </div>
-          </li>
-          <li>
-            <form action="pagina_de_cautare.html" method="GET">
-              <input type="text" name="q" placeholder="Caută...">
-              <button type="submit">Caută</button>
-            </form>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>   
-      <div class="container">
-        <section id="latest-discussions">
-          <ul id="discussion-list">
-          </ul>
-        </section>
-  <footer>
-    <p>&copy; 2024 Forum Moto.</p>
-  </footer>
+            <div class="mySlides fade">
+                <img src="Poze/images1.jpg" style="width:100%">
+            </div>
+            <div class="mySlides fade">
+                <img src="Poze/images2.jpg" style="width:100%">
+            </div>
+            <div class="mySlides fade">
+                <img src="Poze/images.jpg" style="width:100%">
+            </div>
+        </div>
+        <div class="nav-container">
+            <nav>
+                <ul>
+                    <li><a href="Login.html"><button class="login-btn">Login</button></a></li>
+                    <li><a href="Signup.html"><button class="signup-btn">Signup</button></a></li>
+                    <li>
+                        <div class="menu-container">
+                            <button class="menu-btn" onclick="toggleMenu()">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </button>
+                            <nav class="menu" onclick="toggleMenu()">
+                                <a href="Pagina_de_start.html">Acasă</a>
+                                <a href="Forum.html">Forum</a>
+                                <a href="#">Despre</a>
+                                <a href="#">Contact</a>
+                            </nav>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div id="discussion-list"></div>
+    <form id="add-discussion-form">
+        <input type="text" id="discussion-title" placeholder="Titlul discuției" required>
+        <textarea id="discussion-description" placeholder="Descrierea discuției" required></textarea>
+        <button type="submit">Adaugă Discuție</button>
+    </form>
 
-  <script src="Pagina_de_start.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Adaugă un eveniment pentru formularul de adăugare a unei noi discuții
+            document.getElementById('add-discussion-form').addEventListener('submit', async (event) => {
+                event.preventDefault(); // Previne acțiunea implicită de trimitere a formularului
+
+                const title = document.getElementById('discussion-title').value;
+                const description = document.getElementById('discussion-description').value;
+
+                try {
+                    const response = await fetch('/forum/add-discussion', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, description })
+                    });
+                    if (response.ok) {
+                        // Dacă adăugarea a avut succes, reîncarcă lista de discuții
+                        loadDiscussions();
+                    } else {
+                        console.error('Eroare la adăugarea discuției:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Eroare la adăugarea discuției:', error);
+                }
+            });
+
+            // Funcție pentru încărcarea discuțiilor din baza de date și afișarea lor pe pagină
+            async function loadDiscussions() {
+                try {
+                    const response = await fetch('/forum/discussions');
+                    if (response.ok) {
+                        const discussions = await response.json();
+                        const discussionList = document.getElementById('discussion-list');
+                        discussionList.innerHTML = ''; // Curăță lista actuală de discuții
+                        discussions.forEach(discussion => {
+                            // Construiește elementele HTML pentru fiecare discuție și le adaugă în lista de discuții
+                            const discussionItem = document.createElement('div');
+                            discussionItem.classList.add('discussion-item');
+                            discussionItem.innerHTML = `
+                                <h3>${discussion.title}</h3>
+                                <p>${discussion.description}</p>
+                                <p>Data: ${new Date(discussion.date).toLocaleString()}</p>
+                            `;
+                            discussionList.appendChild(discussionItem);
+                        });
+                    } else {
+                        console.error('Eroare la încărcarea discuțiilor:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Eroare la încărcarea discuțiilor:', error);
+                }
+            }
+
+            // La încărcarea paginii, apelează funcția pentru încărcarea discuțiilor
+            loadDiscussions();
+        });
+        // Funcții pentru slideshow
+        var slideIndex = 0;
+        showSlides();
+
+        function showSlides() {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {
+                slideIndex = 1;
+            }
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 10000);
+        }
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        // Funcții pentru meniul dropdown
+        const menu = document.querySelector('.menu');
+        const menuBtn = document.querySelector('.menu-btn');
+
+        menuBtn.addEventListener('click', function() {
+            menu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+    </script>
 </body>
 </html>
